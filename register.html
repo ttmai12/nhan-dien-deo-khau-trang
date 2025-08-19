@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Đăng ký tài khoản giám sát</title>
+    <style>
+        body { background: #e1f5fe; font-family: Arial; display: flex; align-items: center; justify-content: center; height: 100vh; }
+        .register-box { background: #fff; padding: 32px 24px; border-radius: 12px; box-shadow: 0 4px 24px #b39ddb; min-width: 320px; }
+        input { margin: 8px 0; padding: 8px; width: 100%; border-radius: 6px; border: 1px solid #b39ddb; }
+        button { background: #42a5f5; color: #fff; border: none; padding: 10px 22px; border-radius: 8px; cursor: pointer; width: 100%; }
+        .error { color: #d32f2f; margin-bottom: 8px; }
+        label { font-weight: bold; }
+    </style>
+</head>
+<body>
+    <form class="register-box" method="post">
+        <h2 style="text-align:center;">Đăng ký tài khoản</h2>
+        {% if error %}<div class="error">{{ error }}</div>{% endif %}
+        <label for="username">Tài khoản:</label>
+        <input type="text" name="username" required>
+        <label for="password">Mật khẩu:</label>
+        <input type="password" name="password" required>
+        <label><input type="checkbox" name="is_admin"> Quản trị viên</label>
+        <button type="submit">Đăng ký</button>
+        <div style="margin-top:12px;text-align:center;"><a href="/login">Quay lại đăng nhập</a></div>
+    </form>
+</body>
+</html>

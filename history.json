@@ -1,0 +1,20 @@
+[
+  {
+    "time": "01:00:11 19/8/2025",
+    "type": "Ảnh tải lên",
+    "result": "Đeo khẩu trang đúng",
+    "username": "Tuyet Mai"
+  },
+  {
+    "time": "01:00:30 19/8/2025",
+    "type": "Ảnh tải lên",
+    "result": "Không đeo khẩu trang",
+    "username": "Tuyet Mai"
+  },
+  {
+    "time": "01:00:40 19/8/2025",
+    "type": "Ảnh tải lên",
+    "result": "Đeo khẩu trang sai",
+    "username": "Tuyet Mai"
+  }
+]

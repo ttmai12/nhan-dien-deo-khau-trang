@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ thống Camera Giám sát Đeo Khẩu trang</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="header animate-header">
+            <h1>🎥 Hệ thống Camera Giám sát Đeo Khẩu trang</h1>
+            <p>AI-Powered Mask Detection System - Real-time Monitoring</p>
+        </div>
+        <div class="actions" style="display: flex; justify-content: space-between; align-items: center; gap: 32px; margin-bottom: 24px; margin-top: 32px;">
+            <a href="/login" class="btn" style="min-width:120px; text-align:center; font-weight:bold; border-radius:8px; border:1px solid #bdbdbd; background:#fff; color:#333; box-shadow:0 2px 8px #e0e0e0; text-decoration:none;">Đăng nhập</a>
+            <a href="/register" class="btn" style="min-width:120px; text-align:center; font-weight:bold; border-radius:8px; border:1px solid #bdbdbd; background:#fff; color:#333; box-shadow:0 2px 8px #e0e0e0; text-decoration:none;">Đăng ký</a>
+            <a href="/logout" class="btn" style="min-width:120px; text-align:center; font-weight:bold; border-radius:8px; border:1px solid #bdbdbd; background:#fff; color:#333; box-shadow:0 2px 8px #e0e0e0; text-decoration:none;">Đăng xuất</a>
+            <a href="/admin" class="btn" style="min-width:160px; text-align:center; font-weight:bold; border-radius:8px; border:1px solid #bdbdbd; background:#fff; color:#333; box-shadow:0 2px 8px #e0e0e0; text-decoration:none;">Quản trị & Xuất/Xóa báo cáo</a>
+        </div>
+        <div class="main-content" style="display: flex; gap: 32px; justify-content: center; align-items: flex-start;">
+            <div class="camera-section" style="flex:1; min-width:320px;">
+                <div class="status-indicator status-inactive" id="statusIndicator"></div>
+                <h3 style="margin-bottom: 15px; color: #333;">📹 Camera Giám sát</h3>
+                <div class="camera-container" id="cameraContainer">
+                    <video id="cameraVideo" style="width: 100%; height: 100%; object-fit: cover; display: none; border-radius: 12px;"></video>
+                    <canvas id="cameraCanvas" style="width: 100%; height: 100%; object-fit: cover; display: none; border-radius: 12px;"></canvas>
+                    <div class="camera-placeholder" id="cameraPlaceholder">
+                        <div style="font-size: 3em; margin-bottom: 15px;">📷</div>
+                        <div>Nhấn "Bật Camera Giám sát" để khởi động camera</div>
+                        <div style="font-size: 0.9em; margin-top: 10px; opacity: 0.8;">Camera sẽ yêu cầu quyền truy cập</div>
+                    </div>
+                    <div class="detection-overlay" id="detectionOverlay"></div>
+                </div>
+                <div style="margin-bottom:12px;">
+                    <label for="cameraSelect" style="font-weight:bold; color:#7e57c2; font-size:1.1em; margin-bottom:8px; display:block;">Chọn camera giám sát:</label>
+                    <select id="cameraSelect" style="padding:8px; border-radius:8px; min-width:180px;"></select>
+                </div>
+                <div class="controls">
+                    <button class="btn btn-primary" onclick="startCamera()">🚀 Bật Camera Giám sát</button>
+                    <button class="btn btn-primary" onclick="startMonitoring()" id="monitorBtn" style="display: none;">🎯 Bắt đầu Giám sát</button>
+                    <button class="btn btn-danger" onclick="stopMonitoring()">⏹️ Dừng Giám sát</button>
+                    <button class="btn" id="captureBtn" onclick="capturePhoto()" style="display:inline-block;">📸 Chụp ảnh</button>
+                </div>
+                <div style="margin-top:18px;">
+                    <label for="fileUpload" style="font-weight:bold; color:#7e57c2; font-size:1.1em; margin-bottom:8px; display:block;">Tải ảnh từ máy lên để phân tích:</label>
+                    <input id="fileUpload" type="file" accept="image/*" onchange="handleUpload(event)">
+                    <img id="uploadPreview" style="display:none; margin-top:10px; box-shadow:0 2px 8px #b39ddb; border:2px solid #7e57c2; border-radius:12px;" />
+                </div>
+            </div>
+            <div class="stats-panel animate-panel" style="flex:1; min-width:320px;">
+                <h3>📊 Thống kê Realtime</h3>
+                <div class="stat-item">
+                    <div class="stat-label">Tổng số người phát hiện</div>
+                    <div class="stat-value" id="totalPeople">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">✅ Đeo khẩu trang đúng</div>
+                    <div class="stat-value success" id="maskCount">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">⚠️ Đeo khẩu trang sai</div>
+                    <div class="stat-value warning" id="incorrectMaskCount">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">❌ Không đeo khẩu trang</div>
+                    <div class="stat-value danger" id="noMaskCount">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">📈 Tỷ lệ tuân thủ</div>
+                    <div class="stat-value" id="complianceRate">0%</div>
+                </div>
+                <div class="alerts-section">
+                    <h4 style="margin-bottom: 15px; color: #333;">🚨 Cảnh báo gần đây</h4>
+                    <div id="alertsList">
+                        <div class="alert-item">
+                            <div>Hệ thống đang chờ kích hoạt...</div>
+                            <div class="alert-time">Sẵn sàng giám sát</div>
+                        </div>
+                    </div>
+                </div>
+                <div id="sessionStats" style="margin-top:18px;"></div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/face-api.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

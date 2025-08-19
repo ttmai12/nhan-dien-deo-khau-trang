@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản trị giám sát khẩu trang</title>
+    <style>
+        body { background: #e1f5fe; font-family: Arial; }
+        .container { max-width: 900px; margin: 32px auto; background: #fff; border-radius: 12px; box-shadow: 0 4px 24px #b39ddb; padding: 32px; }
+        h2 { text-align: center; }
+        .actions { display: flex; justify-content: space-between; align-items: center; gap: 32px; margin-bottom: 18px; }
+        .actions a, .actions form { margin-left: 12px; display: inline-block; }
+        .actions .btn { min-width: 120px; padding: 8px 18px; border-radius: 8px; font-weight: bold; text-decoration: none; border: 1px solid #bdbdbd; background: #fff; color: #333; box-shadow: 0 2px 8px #e0e0e0; cursor: pointer; text-align: center; }
+        .export { background: #388e3c; color: #fff; }
+        .delete { background: #d32f2f; color: #fff; }
+        .logout { background: #d32f2f; color: #fff; }
+        .login { background: #1976d2; color: #fff; }
+        .register { background: #ab47bc; color: #fff; }
+        table { width: 100%; border-collapse: collapse; margin-top: 24px; }
+        th, td { border: 1px solid #b39ddb; padding: 8px; text-align: center; }
+        th { background: #7e57c2; color: #fff; }
+        tr:nth-child(even) { background: #f3e5f5; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="actions">
+            <a href="/login" class="btn">Đăng nhập</a>
+            <a href="/register" class="btn">Đăng ký</a>
+            <a href="/logout" class="btn">Đăng xuất</a>
+            <a href="/export_history" class="btn">Xuất báo cáo CSV</a>
+            <form method="post" action="/delete_history" style="display:inline; margin:0;">
+                <button type="submit" class="btn" onclick="return confirm('Bạn có chắc muốn xóa toàn bộ lịch sử giám sát?');">Xóa lịch sử</button>
+            </form>
+        </div>
+        <h2>Lịch sử giám sát khẩu trang</h2>
+        <table>
+            <tr>
+                <th>Tài khoản</th>
+                <th>Thời gian</th>
+                <th>Loại</th>
+                <th>Kết quả</th>
+            </tr>
+            {% for item in history %}
+            <tr>
+                <td>{{ item['username'] }}</td>
+                <td>{{ item['time'] }}</td>
+                <td>{{ item['type'] }}</td>
+                <td>{{ item['result'] }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>
